@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  security-intel-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: security-intel-api
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: 3000
+      RATE_LIMIT_WINDOW_MS: 900000
+      RATE_LIMIT_MAX_REQUESTS: 100
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      HIBP_API_KEY: ${HIBP_API_KEY:-}
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/v1/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
