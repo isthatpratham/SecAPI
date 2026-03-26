@@ -1,4 +1,4 @@
-# Security Intelligence API
+# Security Intelligence API (UNDER DEVELOPMENT)
 
 A production-ready Security Intelligence API for URL scanning, domain analysis, password strength checking, and breach detection. Built with Node.js, Express, and TypeScript.
 
