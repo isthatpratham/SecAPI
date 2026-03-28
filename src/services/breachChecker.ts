@@ -86,6 +86,18 @@ export const checkEmailBreach = async (
       throw new Error('Breach check service temporarily unavailable (rate limited)');
     }
 
+    // Handle timeout errors
+    if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
+      logger.error('Breach check service timeout', { timeout_ms: CONSTANTS.HIBP.TIMEOUT_MS });
+      throw new Error('Breach check service timeout - please try again later');
+    }
+
+    // Handle network errors
+    if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
+      logger.error('Cannot reach breach check service', { error_code: error.code });
+      throw new Error('Breach check service unavailable - please try again later');
+    }
+
     logger.error('Error checking email breach:', { error: String(error) });
     throw new Error('Failed to check email breach status');
   }
