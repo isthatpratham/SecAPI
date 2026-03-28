@@ -102,6 +102,24 @@ export interface PasswordAnalysis {
 export const analyzePassword = (password: string): PasswordAnalysis => {
   logger.info('Analyzing password strength');
 
+  // Validate password input - cannot be empty or too short for meaningful analysis
+  if (!password || password.length === 0) {
+    logger.warn('Empty password provided for analysis');
+    return {
+      length: 0,
+      entropy: 0,
+      strength: 'weak',
+      score: 0,
+      has_uppercase: false,
+      has_lowercase: false,
+      has_numbers: false,
+      has_special_chars: false,
+      common_word: false,
+      crack_time_seconds: 0,
+      issues: ['Password cannot be empty'],
+    };
+  }
+
   const analysis: PasswordAnalysis = {
     length: password.length,
     entropy: calculateEntropy(password),
