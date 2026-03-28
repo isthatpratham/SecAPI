@@ -14,6 +14,14 @@ export interface BreachRecord {
 }
 
 /**
+ * Validate email format
+ */
+const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+/**
  * Check if email has been breached using HaveIBeenPwned API
  */
 export const checkEmailBreach = async (
@@ -22,6 +30,15 @@ export const checkEmailBreach = async (
   breached: boolean;
   breaches: BreachRecord[];
 }> => {
+  // Validate email format before making API call
+  if (!isValidEmail(email)) {
+    logger.warn('Invalid email format provided', { email: '***' });
+    return {
+      breached: false,
+      breaches: [],
+    };
+  }
+
   try {
     // HaveIBeenPwned API requires a User-Agent header
     const response = await axios.get(`${CONSTANTS.HIBP.BASE_URL}/breachedaccount`, {
