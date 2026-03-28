@@ -14,6 +14,14 @@ export interface BreachRecord {
 }
 
 /**
+ * Validate email format
+ */
+const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+/**
  * Check if email has been breached using HaveIBeenPwned API
  */
 export const checkEmailBreach = async (
@@ -22,6 +30,15 @@ export const checkEmailBreach = async (
   breached: boolean;
   breaches: BreachRecord[];
 }> => {
+  // Validate email format before making API call
+  if (!isValidEmail(email)) {
+    logger.warn('Invalid email format provided', { email: '***' });
+    return {
+      breached: false,
+      breaches: [],
+    };
+  }
+
   try {
     // HaveIBeenPwned API requires a User-Agent header
     const response = await axios.get(`${CONSTANTS.HIBP.BASE_URL}/breachedaccount`, {
@@ -67,6 +84,18 @@ export const checkEmailBreach = async (
     if (error.response?.status === 429) {
       logger.warn('HIBP API rate limited');
       throw new Error('Breach check service temporarily unavailable (rate limited)');
+    }
+
+    // Handle timeout errors
+    if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
+      logger.error('Breach check service timeout', { timeout_ms: CONSTANTS.HIBP.TIMEOUT_MS });
+      throw new Error('Breach check service timeout - please try again later');
+    }
+
+    // Handle network errors
+    if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
+      logger.error('Cannot reach breach check service', { error_code: error.code });
+      throw new Error('Breach check service unavailable - please try again later');
     }
 
     logger.error('Error checking email breach:', { error: String(error) });

@@ -149,6 +149,16 @@ export const extractDomain = (urlOrDomain: string): string | null => {
 };
 
 /**
+ * Validate domain format - must contain at least one dot and valid characters
+ */
+const isValidDomain = (domain: string): boolean => {
+  if (!domain || domain.length === 0) return false;
+  // Domain must have at least one dot and alphanumeric characters
+  const domainRegex = /^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/;
+  return domainRegex.test(domain) || domain.includes('.');
+};
+
+/**
  * Analyze domain reputation
  * This is a mock implementation - in production, integrate with actual threat intelligence APIs
  */
@@ -159,6 +169,15 @@ export const analyzeDomainReputation = async (
   reputation_score: number;
   last_seen?: string;
 }> => {
+  // Validate domain input before processing
+  if (!isValidDomain(domain)) {
+    logger.warn('Invalid domain format provided for analysis', { domain: '***' });
+    return {
+      is_registered: false,
+      reputation_score: 0,
+    };
+  }
+
   try {
     logger.info('Analyzing domain reputation:', { domain });
 

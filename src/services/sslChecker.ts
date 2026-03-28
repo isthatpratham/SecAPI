@@ -9,9 +9,27 @@ import { SSLInfo } from '../types';
 import { logger } from '../utils/logger';
 
 /**
+ * Validate if URL string is properly formatted
+ */
+const isValidURL = (urlString: string): boolean => {
+  try {
+    new URL(urlString);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+/**
  * Fetch SSL certificate information from a URL
  */
 export const getSSLCertificateInfo = async (urlString: string): Promise<SSLInfo | null> => {
+  // Validate URL format first
+  if (!isValidURL(urlString)) {
+    logger.warn('Invalid URL format provided for SSL check', { urlString: '***' });
+    return null;
+  }
+
   try {
     const url = new URL(urlString);
     const hostname = url.hostname;
