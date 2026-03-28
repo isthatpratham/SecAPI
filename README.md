@@ -1,4 +1,4 @@
-# 🔒 Security Intelligence API
+# Security Intelligence API (UNDER DEVELOPMENT)
 
 <div align="center">
 
@@ -914,40 +914,21 @@ Priority roadmap for upcoming releases:
 
 ## 📝 Changelog
 
-### v1.0.0 (2024-01-20) - Initial Release ✨
-
-**Features**:
-- ✅ URL security scanning with multiple checks
-- ✅ Domain analysis and phishing detection
-- ✅ Password strength analysis with entropy calculation
-- ✅ Email breach detection via HaveIBeenPwned
-- ✅ Security headers analysis
-- ✅ SSL/TLS certificate validation
-
-**Infrastructure**:
-- ✅ Express.js with TypeScript
-- ✅ Rate limiting (100 req/15min)
-- ✅ Comprehensive error handling
-- ✅ Winston logging with file output
-- ✅ Jest test suite with 85%+ coverage
-- ✅ Docker & docker-compose support
-- ✅ Helmet.js security headers
-- ✅ CORS configuration
-
-**Documentation**:
-- ✅ Complete API documentation
-- ✅ Quick start guide
-- ✅ Deployment guide
-- ✅ Project architecture overview
+### v1.0.0 (Current)
+- Initial release
+- URL security scanning
+- Domain analysis and phishing detection
+- Password strength analysis
+- Email breach checking
+- Rate limiting
+- Comprehensive error handling
+- Full TypeScript support
+- Jest test suite
 
 ---
 
-<div align="center">
+**API Base URL**: `http://localhost:3000/api/v1`
 
-**[API Base URL](http://localhost:3000/api/v1)** • **[Repository](https://github.com/isthatpratham/SecAPI)** • **[Report Issues](https://github.com/isthatpratham/SecAPI/issues)**
+**API Version**: 1.0.0
 
-**Version**: 1.0.0 • **Last Updated**: 2024-01-20 • **Status**: ✅ Production Ready
-
-Made with ❤️ by the SecAPI team
-
-</div>
+**Last Updated**: 22-03-2026
